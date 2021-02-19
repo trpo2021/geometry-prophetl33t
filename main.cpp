@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -5,6 +6,14 @@
 const char* SHAPES_FNAME = "shapes.txt";
 
 #define IS_DEBUG
+
+//Функция для нахождения подстроки в строке вне зависимости от регистра
+size_t FindCaseInsens(std::string str, std::string substr)
+{
+    std::transform(str.begin(), str.end(), str.begin(), tolower);
+    std::transform(substr.begin(), substr.end(), substr.begin(), tolower);
+    return str.find(substr, 0);
+}
 
 void ParseCircle(std::string& str)
 {
@@ -52,9 +61,9 @@ int main(int argc, char* argv[])
         std::string temp;
 
         std::getline(file, temp);
-        if (temp.find("circle") != std::string::npos) {
+        if (FindCaseInsens(temp, "circle") != std::string::npos) {
             ParseCircle(temp);
-        } else if (temp.find("triangle") != std::string::npos) {
+        } else if (FindCaseInsens(temp, "triangle") != std::string::npos) {
             ParseTriangle(temp);
         } else {
             std::cout << "Warning! Unknown type of figure in line " << line_num
