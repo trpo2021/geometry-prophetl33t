@@ -1,18 +1,20 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <string_view>
 
 const char* SHAPES_FNAME = "shapes.txt";
+
+#define IS_DEBUG
 
 void ParseCircle(std::string& str)
 {
     int x1 = 0;
     int y1 = 0;
     float radius = 0;
-    FILE* f = fopen(SHAPES_FNAME, "rb");
-    fscanf(f, "circle(%d %d, %f)", &x1, &y1, &radius);
+    sscanf(str.data(), "circle(%d %d, %f)", &x1, &y1, &radius);
+#ifdef IS_DEBUG
     printf("%d %d %f\n", x1, y1, radius);
+#endif
 }
 
 void ParseTriangle(std::string& str)
@@ -24,9 +26,17 @@ void ParseTriangle(std::string& str)
     int x3 = 0;
     int y3 = 0;
     float radius = 0;
-    FILE* f = fopen(SHAPES_FNAME, "rb");
-    fscanf(f, "triangle(%d %d, %d %d, %d %d)", &x1, &y1, &x2, &y2, &x3, &y3);
+    sscanf(str.data(),
+           "triangle(%d %d, %d %d, %d %d)",
+           &x1,
+           &y1,
+           &x2,
+           &y2,
+           &x3,
+           &y3);
+#ifdef IS_DEBUG
     printf("%d %d %d %d %d %d ", x1, y1, x2, y2, x3, y3);
+#endif
 }
 
 int main(int argc, char* argv[])
@@ -34,9 +44,10 @@ int main(int argc, char* argv[])
     if (argc > 1) {
         SHAPES_FNAME = argv[2];
     }
+
     std::ifstream file(SHAPES_FNAME);
 
-    int a = 0;
+    int line_num = 0;
     while (!file.eof()) {
         std::string temp;
 
@@ -46,10 +57,10 @@ int main(int argc, char* argv[])
         } else if (temp.find("triangle") != std::string::npos) {
             ParseTriangle(temp);
         } else {
-            std::cout << "Warning! Unknown type of figure in line " << a
+            std::cout << "Warning! Unknown type of figure in line " << line_num
                       << " : " << temp << "\n";
         }
-        a++;
+        line_num++;
     }
     return 0;
 }
