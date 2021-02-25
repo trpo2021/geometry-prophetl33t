@@ -1,6 +1,5 @@
-#include <fstream>
-#include <iostream>
 #include "ShapeParser.h"
+#include <fstream>
 
 const char* SHAPES_FNAME = "shapes.txt";
 
@@ -18,9 +17,13 @@ int main(int argc, char* argv[])
 
         std::getline(file, temp);
         if (FindCaseInsens(temp, "circle") != std::string::npos) {
-            ParseCircle(temp);
+            auto circle = ParseCircle(temp);
+            printf("Area: %f\nPerimeter: %f\n", circle.first, circle.second);
         } else if (FindCaseInsens(temp, "triangle") != std::string::npos) {
-            ParseTriangle(temp);
+            auto triangle = ParseTriangle(temp);
+            printf("Area: %f\nPerimeter: %f\n",
+                   triangle.first,
+                   triangle.second);
         } else {
             printf("Warning! Unknown type of figure in line %d\n%s\n",
                    line_num,
